@@ -8,20 +8,8 @@
     },
     "routes": [
         {
-            "src": "/build/(.*)",
-            "dest": "/public/build/"
-        },
-        {
-            "src": "/css/(.*)",
-            "dest": "/public/css/"
-        },
-        {
-            "src": "/images/(.*)",
-            "dest": "/public/images/"
-        },
-        {
-            "src": "/js/(.*)",
-            "dest": "/public/js/"
+            "src": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|svg|ico|webp|avif|txt|woff|woff2))$",
+            "dest": "/public/$1"
         },
         {
             "src": "/(.*)",
@@ -34,9 +22,9 @@
         "APP_URL": "",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
+        "APP_SERVICES_CACHE": "/tmp/services.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
         "APP_ROUTES_CACHE": "/tmp/routes.php",
-        "APP_SERVICES_CACHE": "/tmp/services.php",
         "VIEW_COMPILED_PATH": "/tmp",
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
