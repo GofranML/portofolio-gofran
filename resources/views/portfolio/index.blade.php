@@ -335,7 +335,9 @@
 
                 <div class="edu-info">
                     <h3>{{ $portfolio->education->title ?? 'Bachelor of Informatika' }}</h3>
-                    <div class="edu-sub">{{ $portfolio->education->description }}</div>
+                    <div class="edu-sub">
+    {{ $portfolio->education?->description ?? 'S1 Informatika — Institut Teknologi dan Bisnis PalComTech' }}
+</div>
                     @if (!empty($portfolio->education->points))
                         <div class="edu-courses">
                             @foreach ($portfolio->education->points as $course)
