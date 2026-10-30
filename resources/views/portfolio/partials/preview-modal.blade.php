@@ -1,7 +1,7 @@
 <!-- PROJECT GALLERY MODAL / LIGHTBOX -->
-<div id="projectGalleryModal" class="project-modal" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+<div id="projectGalleryModal" class="project-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalProjectTitle" tabindex="-1">
     <div class="project-modal-backdrop" id="modalBackdrop"></div>
-    <div class="project-modal-dialog">
+    <div class="project-modal-dialog" role="document">
         <!-- MODAL HEADER -->
         <header class="project-modal-header">
             <div class="modal-meta-block">
@@ -12,14 +12,14 @@
                 <div class="modal-counter-badge">
                     <span id="modalCurrentIndex">1</span> / <span id="modalTotalCount">3</span>
                 </div>
-                <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn" title="Buka gambar resolusi penuh di tab baru" aria-label="Buka gambar resolusi penuh di tab baru">
+                <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn" title="Buka gambar resolusi penuh di tab baru" aria-label="Buka gambar resolusi penuh di tab baru" data-i18n-title="modal.open_full" data-i18n-aria="modal.open_full">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M15 3h6v6" />
                         <path d="M10 14 21 3" />
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                     </svg>
                 </a>
-                <button type="button" class="modal-action-btn close-btn" id="modalCloseBtn" aria-label="Tutup pratinjau hasil proyek">
+                <button type="button" class="modal-action-btn close-btn" id="modalCloseBtn" aria-label="Tutup pratinjau hasil proyek" data-i18n-aria="modal.close">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M18 6 6 18" />
                         <path d="m6 6 12 12" />
@@ -29,13 +29,13 @@
         </header>
 
         <!-- NAVIGATION TABS -->
-        <nav class="modal-tabs" id="modalTabs" aria-label="Pilih tampilan hasil proyek">
+        <nav class="modal-tabs" id="modalTabs" role="tablist" aria-label="Pilih tampilan hasil proyek" data-i18n-aria="modal.tabs_aria">
             <!-- Populated dynamically via JS -->
         </nav>
 
         <!-- MAIN VIEWER STAGE -->
         <div class="modal-viewer-stage">
-            <button type="button" class="stage-nav-btn prev" id="modalPrevBtn" aria-label="Tangkapan layar sebelumnya">
+            <button type="button" class="stage-nav-btn prev" id="modalPrevBtn" aria-label="Tangkapan layar sebelumnya" data-i18n-aria="modal.prev">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="m15 18-6-6 6-6" />
                 </svg>
@@ -45,10 +45,10 @@
                 <div class="stage-loader" id="modalImageLoader" aria-hidden="true">
                     <div class="spinner"></div>
                 </div>
-                <img id="modalMainImage" src="" alt="Pratinjau Hasil Proyek" class="stage-img">
+                <img id="modalMainImage" src="" alt="Pratinjau Hasil Proyek" class="stage-img" width="1280" height="587">
             </div>
 
-            <button type="button" class="stage-nav-btn next" id="modalNextBtn" aria-label="Tangkapan layar selanjutnya">
+            <button type="button" class="stage-nav-btn next" id="modalNextBtn" aria-label="Tangkapan layar selanjutnya" data-i18n-aria="modal.next">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="m9 18 6-6-6-6" />
                 </svg>
@@ -65,7 +65,7 @@
                 <p class="caption-desc" id="modalSlideDesc">Deskripsi hasil proyek akan tampil di sini.</p>
             </div>
 
-            <div class="modal-thumbnail-strip" id="modalThumbStrip" role="tablist" aria-label="Thumbnail tangkapan layar">
+            <div class="modal-thumbnail-strip" id="modalThumbStrip" role="tablist" aria-label="Thumbnail tangkapan layar" data-i18n-aria="modal.thumbs_aria">
                 <!-- Populated dynamically via JS -->
             </div>
         </footer>
@@ -78,10 +78,17 @@
     $galleries = [];
     foreach ($portfolio->projects as $p) {
         if (!empty($p->metadata['gallery'])) {
+            $sanitizedGallery = array_map(function ($slide) {
+                if (isset($slide['description'])) {
+                    $slide['description'] = str_replace([' — ', '—'], [' · ', '·'], $slide['description']);
+                }
+                return $slide;
+            }, $p->metadata['gallery']);
+
             $galleries[$p->slug] = [
                 'projectTitle' => $p->title,
-                'category' => $p->category,
-                'gallery' => $p->metadata['gallery'],
+                'category' => str_replace([' — ', '—'], [' · ', '·'], $p->category ?? 'Proyek Unggulan'),
+                'gallery' => $sanitizedGallery,
             ];
         }
     }

@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /inquiry
+
+Sitemap: https://portofolio-gofran.vercel.app/sitemap.xml
